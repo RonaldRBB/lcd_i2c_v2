@@ -1,5 +1,6 @@
 """PC info class."""
 import psutil
+import os
 
 
 class PcInfo:
@@ -7,8 +8,7 @@ class PcInfo:
 
     def __init__(self):
         """Constructor."""
-        # self.elements_with_temps()
-        # exit()
+        self.__cpu_name = os.environ.get("cpu_name")
 
     def get_cpu_usage(self):
         """Get CPU usage."""
@@ -28,8 +28,8 @@ class PcInfo:
     def get_cpu_temperature(self):
         """Get CPU temperature."""
         temperatures = psutil.sensors_temperatures()
-        if "k10temp" in temperatures:
-            temperature = temperatures["k10temp"][0].current
+        if self.__cpu_name in temperatures:
+            temperature = temperatures[self.__cpu_name][0].current
             return temperature
         else:
             return "N/A"

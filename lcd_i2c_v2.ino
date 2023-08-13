@@ -28,8 +28,20 @@ void loop()
         int cpuUsage = jsonDoc["cpu_usage"];
         int ramUsage = jsonDoc["ram_usage"];
         int cpuTemp = jsonDoc["cpu_temperature"];
+        String cpuUsageStr = String(cpuUsage);
+        String ramUsageStr = String(ramUsage);
+        String cpuTempStr = String(cpuTemp);
+        if (cpuUsageStr.length() == 1) {
+            cpuUsageStr = "0" + cpuUsageStr;
+        }
+        if (ramUsageStr.length() == 1) {
+            ramUsageStr = "0" + ramUsageStr;
+        }
+        if (cpuTempStr.length() == 1) {
+            cpuTempStr = "0" + cpuTempStr;
+        }
         lcd.clear();
-        lcd.print("C:" + String(cpuUsage) + " R:" + String(ramUsage) + " T:" + String(cpuTemp) + "");
+        lcd.print("C:" + cpuUsageStr + " R:" + ramUsageStr + " T:" + cpuTempStr + "");
         // lcd.setCursor(0, 1);
     }
 }
