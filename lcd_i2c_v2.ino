@@ -1,34 +1,14 @@
 #include <Wire.h>
 #include <LCD.h>
 #include <LiquidCrystal_I2C.h>
+#include <ArduinoJson.h>
 
+// ...
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7);
 
-bool isConnected = true;
 unsigned long lastMessageTime = 0;
 int backlightSatus = HIGH;
-void blinkScreen(bool isOn)
-{
-    if (!isOn)
-    {
-        if (millis() - lastMessageTime > 1000)
-        {
-            lastMessageTime = millis();
-            if (backlightSatus == HIGH)
-            {
-                lcd.setBacklight(LOW);
-            }
-            else
-            {
-                lcd.setBacklight(HIGH);
-            }
-        }
-    }
-    else
-    {
-        lcd.setBacklight(HIGH);
-    }
-}
+
 void setup()
 {
     Serial.begin(9600);
@@ -36,16 +16,20 @@ void setup()
     lcd.setBacklight(HIGH);
     lcd.begin(16, 2);
     lcd.clear();
+    lcd.print("Hello World!");
 }
 void loop()
 {
-    isConnected = false;
     while (Serial.available() > 0)
     {
-        String message = Serial.readStringUntil('\n');
+        String jsonMessage = Serial.readStringUntil('\n');
+        DynamicJsonDocument jsonDoc(1024);
+        deserializeJson(jsonDoc, jsonMessage);
+        int cpuUsage = jsonDoc["cpu_usage"];
+        int ramUsage = jsonDoc["ram_usage"];
+        int cpuTemp = jsonDoc["cpu_temperature"];
         lcd.clear();
-        lcd.print(message);
-        isConnected = true;
+        lcd.print("C:" + String(cpuUsage) + " R:" + String(ramUsage) + " T:" + String(cpuTemp) + "");
+        // lcd.setCursor(0, 1);
     }
-    // blinkScreen(isConnected);
 }
