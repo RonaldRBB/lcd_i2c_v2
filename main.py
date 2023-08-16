@@ -43,8 +43,9 @@ def main():
                 if arduino is None:
                     time.sleep(1)
                     continue
-            cpu_usage = pc_info.get_all_info()
-            mensaje = f"{cpu_usage}\n"
+            data = pc_info.get_all_info()
+            mensaje = f"{data}\n"
+            print(mensaje)
             send_message(arduino, mensaje)
             time.sleep(1)
         except KeyboardInterrupt:
